@@ -12,6 +12,8 @@ var express = require('express'),
 io.set('transports', ['polling']);
 
 var port = process.env.PORT || 4000;
+var postgres_user = process.env.POSTGRES_USER; //get user name from secret
+var postgres_password = process.env.POSTGRES_PASSWORD; //get password from secret
 
 io.sockets.on('connection', function (socket) {
 
@@ -25,7 +27,7 @@ io.sockets.on('connection', function (socket) {
 async.retry(
   {times: 1000, interval: 1000},
   function(callback) {
-    pg.connect('postgres://postgres_user:postgres_password@db/postgres', function(err, client, done) {
+    pg.connect('postgres://' + postgres_user + ':' + postgres_password + '@db/postgres', function(err, client, done) {
       if (err) {
         console.error("Waiting for db");
       }
